@@ -3,7 +3,7 @@ const express = require('express')
 const app = express()
 
 const mongoose = require('mongoose')
-const Person = require('./models/Person')
+const Animal = require('./models/Animal')
 
 app.use(
     express.urlencoded({
@@ -14,88 +14,90 @@ app.use(
 app.use(express.json())
 
 //rotas
-app.post('/person', async(req, res) => {
+app.post('/animal', async(req, res) => {
     const {name, age} = req.body
-    const person = {
-        name,
-        age
+    const animal = {
+        breed,
+        size,
+        puppy
     }
 
     try {
-        await Person.create(person)
-        res.status(201).json({message: 'Added person'})
+        await Animal.create(animal)
+        res.status(201).json({message: 'Added animal'})
     } catch (error) {
         res.status(500).json({error:error})
-        
     }
 })
 
-app.get('/person', async (req, res) => {
+app.get('/animal', async (req, res) => {
     try {
-        const people = await Person.find()
-        res.status(200).json(people)
+        const animals = await Animal.find()
+        res.status(200).json(animals)
     } catch (error) {
         res.status(500).json({erro:error})
     }
   
 })
 
-app.get('/person/:id', async(req, res) =>
+app.get('/animal/:id', async(req, res) =>
 {
     const id = req.params.id
 
     try {
-        const person = await Person.findOne({_id:id})
-        if(!person) {
-            res.status(422).json({message:'User not found, sry'})
+        const animal = await Animal.findOne({_id:id})
+        if(!animal) {
+            res.status(422).json({message:'Animal not found, sry'})
             return
         }
-        res.status(200).json(person)
+        res.status(200).json(animal)
     } catch (error) {
         res.status(500).json({erro:error})
     }
 })
-app.patch('/person/:id', async(req, res) =>{
+app.patch('/animal/:id', async(req, res) =>{
     const id = req.params.id
-    const {name, age} = req.body
+    const {breed, size, puppy} = req.body
 
-    const person = {
-        name, age
+    const animal = {
+        breed,
+        size,
+        puppy
     }
 
     try {
-        const updatedPerson = await Person.updateOne({_id:id}, person)
-            if(updatedPerson.matchedCount === 0) {
-                res.status(422).json({message:'User not founds'})
+        const updatedAnimal = await Animal.updateOne({_id:id}, animal)
+            if(updatedAnimal.matchedCount === 0) {
+                res.status(422).json({message:'Animals not found'})
                 return
             }
-            res.status(200).json(person)
+            res.status(200).json(animal)
     }catch(error) {
         res.status(500).json({erro:error})
     }
 })
 
-app.delete('/person/:id', async(req,res) => {
+app.delete('/animal/:id', async(req,res) => {
 
     const id = req.params.id
-    const person = await Person.findOne({_id:id})
+    const animal = await Animal.findOne({_id:id})
 
-    if(!person) {
-        res.status(422).json({message:'User not found'})
+    if(!animal) {
+        res.status(422).json({message:'animal not found'})
         return
     }
 
     try {
-        await Person.deleteOne({_id:id})
-        res.status(204).json({message:'Deleted User'})
+        await Animal.deleteOne({_id:id})
+        res.status(204).json({message:'Deleted animal'})
     } catch (error) {
         res.status(500).json({erro:error})
     }
 })
 
-mongoose.connect('mongodb+srv://novouser:fundatec01@cluster0.wlfwjli.mongodb.net/?retryWrites=true&w=majority')
+mongoose.connect('mongodb+srv://vinilemess:mongodb123@fundatectab-cluster.jxjc1x3.mongodb.net/?retryWrites=true&w=majority')
 .then(()=> {
-    console.log('Conectou')
+    console.log('Running at port 3000')
     app.listen(3000)
 })
 .catch((err)=>console.log(err))
