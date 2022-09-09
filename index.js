@@ -15,7 +15,7 @@ app.use(express.json())
 
 //rotas
 app.post('/animal', async(req, res) => {
-    const {name, age} = req.body
+    const {breed, size, puppy} = req.body
     const animal = {
         breed,
         size,
